@@ -1,0 +1,99 @@
+#! /usr/local/bin/node
+
+
+var fs = require('fs'),
+    http = require('http'),
+    https = require('https'),
+    querystring = require('querystring');
+
+var idx,
+    filename,
+    list,
+    filelist,
+    file_png; 
+
+
+// if filename specified --> process this file
+filename = process.argv[2];
+if ( filename && filename.substring( filename.length-3, filename.length) === ".js" ){
+    console.log("Processing a single file");
+    filelist = [ filename ];
+} else {
+    console.log("Processing all files in directory");
+    filelist = [];
+    list = fs.readdirSync(".");
+    list.forEach( function (file) {
+        if ( file.substring( file.length-3, file.length) === ".js" ){
+            file_png = file.substring( 0, file.length-3) + ".png";
+            if ( !fs.existsSync(file_png) ) {
+                filelist.push( file );
+            };
+        };
+    });
+};
+
+
+
+
+
+
+
+
+var replaceGraphie = function(file_js) {
+    var file_png,
+        idx,
+        code,
+        png_url;
+
+    file_png = file_js.substring( 0, file_js.length-3) + ".png";
+
+    code = fs.readFileSync(file_js, 'utf8');
+    post_data = querystring.stringify( { "js":code } ); 
+
+    // An object of options to indicate where to post to
+    var post_options = {
+        host: "graphie-to-png.khanacademy.org",
+        method: 'POST',
+        path: "/png?url_only=1",
+        port: '80',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Content-Length': post_data.length
+        }
+    };
+
+    // Set up the request
+    var post_req = http.request(post_options, function(res) {
+        res.setEncoding('utf8');
+        res.on('data', function (chunk) {
+            console.log("Generated PNG: " + chunk );
+            png_url = chunk;
+            download(png_url, file_png );
+        });
+    });
+
+    post_req.on('error', function(e) {
+        console.log('problem with request: ' + e.message);
+    });
+    
+    post_req.write( post_data );  
+    post_req.end();
+
+};
+
+// download the png
+var download = function(url, dest) {
+  var file = fs.createWriteStream(dest);
+  var request = https.get(url, function(response) {
+    response.pipe(file);
+    file.on('finish', function() {
+      file.close();
+    });
+  });
+}
+
+
+filelist.forEach( function (file) {
+    console.log("Converting " + file );
+    replaceGraphie( file );
+});

@@ -50,8 +50,8 @@ function setup() {
                 Y_RANGE[1] - Y_RANGE[0]]]
     });
 
-    label([0, Y_RANGE[1]], "y", "above");
-    label([X_RANGE[1], 0], "x", "right");
+    label([0, Y_RANGE[1]], "E", "above");
+    label([X_RANGE[1], 0], "n", "right");
 }
 
 
