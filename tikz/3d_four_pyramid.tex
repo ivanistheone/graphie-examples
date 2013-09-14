@@ -1,0 +1,56 @@
+\documentclass[convert={density=600,outext=.png},tikz,crop=true,border=3pt]{standalone}
+
+\usepackage{tikz}
+\usepackage{tikz-3dplot}
+\usetikzlibrary{calc}
+
+
+\begin{document}
+
+\tdplotsetmaincoords{85}{10}
+\begin{tikzpicture}[tdplot_main_coords]
+
+\def\RI{2}
+\def\RII{0}
+\def\xmax{2}
+\def\xdiag{3}
+
+
+
+% foreground
+\draw[thick] (\RI,0)
+  \foreach \x in {0,270,180} { --  (\x:\RI) node at (\x:\RI) (R1-\x) {} };
+
+% background lines
+\draw[dashed,thick] (R1-0.center)
+  \foreach \x in {90,180} { --  (\x:\RI) node at (\x:\RI) (R1-\x) {} };
+
+% bottom shade
+\path[fill=gray!30] (\RI,0)
+  \foreach \x in {0,90,180,270,360} { --  (\x:\RI)};
+
+% top shade 
+\begin{scope}[yshift=4cm]
+\draw[thick,fill=gray!30,opacity=0.5] (\RII,0)
+  \foreach \x in {0,90,180,270,260}
+    { --  (\x:\RII) node at (\x:\RII) (R2-\x) {}};
+\end{scope}
+
+
+% cutting plane 
+\begin{scope}[yshift=2.2cm]
+ \draw[thick,fill=red!30, opacity=0.4]  (0:\xdiag) 
+ \foreach \x in {90,180,270,360} { --  (\x:\xdiag) {} }; 
+%\draw[thick,fill=gray!30,opacity=0.1] (-\xmax,-\xmax) -- (\xmax,-\xmax) -- (\xmax,\xmax) -- (-\xmax,\xmax)--cycle; 
+\xdiag
+%\draw[thick,fill=gray!30,opacity=0.1] (-\xmax,-\xmax) -- (\xmax,-\xmax) -- (\xmax,\xmax) -- (-\xmax,\xmax)--cycle; 
+%  \foreach \x in {0,90,180,270,360}
+%    { --  (\x:\RII) node at (\x:\RII) (R2-\x) {}};
+\end{scope}
+
+%vertical bars
+\foreach \x in {0,270,180} { \draw (R1-\x.center)--(R2-\x.center); };
+\foreach \x in {90} { \draw[dashed] (R1-\x.center)--(R2-\x.center); };
+\end{tikzpicture}
+
+\end{document}
