@@ -24,7 +24,7 @@ var xangle = PI / 15;
 var yangle = -PI / 8;
 */
 
-var scale = 5;
+var scale = 6;
 
 
 var drawCube = function( width, length, height, options) {
@@ -37,8 +37,12 @@ var drawCube = function( width, length, height, options) {
         [0,0,height],           // 4        // bottom four
         [width,0,height],       // 5
         [width,length,height],  // 6
-        [0,length,height]       // 7
-    ];
+        [0,length,height],      // 7
+        [-0.618*width,-0.618*length,height/2],         // 8        //middle four
+        [1.618*width,-0.618*length,height/2],     // 9
+        [1.618*width,1.618*length,height/2],    // 10
+        [-0.618*width,1.618*length,height/2]    // 11
+];
     
     _.defaults(options, {
         sideLabels: [],
@@ -81,7 +85,16 @@ var drawCube = function( width, length, height, options) {
                       [vertices[7], vertices[4]]
                    ],*/
             labels: [[ [width/2, length/2, height], ""]]
+        }, {
+            verts: [9,10,11],
+            color: color4,
+            infront: true
+        }, {
+            verts: [9,11,8],
+            color: color4,
+            infront: true
         }
+        
     ];
 
     var obj = make3dObject(vertices, {scale: scale,faceBorder: true});
@@ -136,19 +149,19 @@ var cube = drawCube(2,2,4, { });
 
 
 cube.setPos([1, -2, 14]);
-cube.rotate(1, 0, 0, PI/2-0.4); 
-cube.rotate(0, 0, 1, PI/10);
+cube.rotate(1, 0, 0, PI/2-0.3); 
+cube.rotate(0, 0, 1, PI/11);
 cube.doDraw();
 
 
-
+/*
 var plane = drawPlane(4,4, { });
 
 plane.setPos([1, 1, 14]);
 plane.rotate(1, 0, 0, PI/2-0.4); 
 plane.rotate(0, 0, 1, PI/10);
 plane.doDraw()
-
+*/
 
 
 
