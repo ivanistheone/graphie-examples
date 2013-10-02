@@ -1,7 +1,7 @@
 /* The X and Y ranges of this canvas */
 
 
-var isTHUMBNAIL = true;
+var isTHUMBNAIL = false;
 
 /* The output's largest side is limited to this many pixels */
 if (isTHUMBNAIL) {
@@ -9,7 +9,7 @@ if (isTHUMBNAIL) {
     var size = 100;
     var scale = 9.2;    
 } else {
-    var range = [[-2, 2], [-1.5, 1.6]];
+    var range = [[-2, 2], [-1.5, 1.1]];
     var size = 400;
     var scale = 6;
 }
@@ -156,8 +156,11 @@ var drawNsidedPrism = function(radiusTop, radiusBottom, height, Nsegments, optio
     faces.push( {
             verts: _.range(0,Nsegments),
             color: options.faceColors[0],
-            lines: [  [vertices[0], vertices[1]] ],
-            labels: [[ polar3D(radiusBottom/sqrt(2),45,0), "3"]]
+            labels: [ 
+                [ polar3D(radiusBottom/sqrt(2)+0.9,45+180,0), "3"],
+                [ polar3D(radiusBottom/sqrt(2)+0.3,45+270,0), "3"],
+                [ polar3D(radiusBottom+0.3,0,1), "3"]
+                ]
     });
     
     // add top face 
@@ -176,7 +179,7 @@ var drawNsidedPrism = function(radiusTop, radiusBottom, height, Nsegments, optio
     
     if (!isTHUMBNAIL) {
     
-        Lside = 1.618*sqrt(1.7)*(radiusTop+radiusBottom)/2;
+        Lside = 1.618*sqrt(1.9)*(radiusTop+radiusBottom)/2;
         Array.prototype.push.apply(vertices,
                         [ 
                         polar3D(Lside,45+135,height/2),
@@ -209,7 +212,7 @@ var drawNsidedPrism = function(radiusTop, radiusBottom, height, Nsegments, optio
 
 
 
-var prism = drawNsidedPrism(2, 2, 4, 4, { } );
+var prism = drawNsidedPrism(2, 2, 2*sqrt(2), 4, { } );
 
 
 prism.setPos([0.4, -1.5, 14]);
